@@ -30,7 +30,7 @@ public class NMS_1_18_R1 implements NMSInterface {
 
     @Override
     public List<String> getBiomesName() {
-        return getBiomeKey().stream().map(minecraftKey -> minecraftKey.a()).collect(Collectors.toList());
+        return dedicatedServer.aV().b(IRegistry.aR).d().stream().map(minecraftKey -> minecraftKey.toString()).collect(Collectors.toList());
     }
     @Override
     public List<String> getBiomesNameByFabricTag(String groupName){
@@ -61,16 +61,12 @@ public class NMS_1_18_R1 implements NMSInterface {
                 return null;   
         }
     }
-    private Collection<MinecraftKey> getBiomeKey() {
-        IRegistryWritable<BiomeBase> registry = dedicatedServer.aV().b(IRegistry.aR);
-        return registry.d();
-    }
 
     private BiomeBase getBiomeBase(Location location) {
         BlockPosition pos = new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
         Chunk nmsChunk = ((CraftWorld) location.getWorld()).getHandle().l(pos);
         if (nmsChunk != null) {
-            return nmsChunk.getNoiseBiome(pos.u(), pos.v(), pos.w());
+            return nmsChunk.getNoiseBiome(pos.u() >> 2, pos.v() >> 2, pos.w() >> 2);
         }
         return null;
     }
